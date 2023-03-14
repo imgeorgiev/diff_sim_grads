@@ -1,4 +1,4 @@
-nimblephysics==0.7.2
+# nimblephysics==0.7.2
 cvxpylayers
 torchdiffeq
 omegaconf
@@ -7,3 +7,6 @@ taichi==1.0.1
 brax==0.0.13
 usd-core
 notebook
+matplotlib
+pandas
+seaborn

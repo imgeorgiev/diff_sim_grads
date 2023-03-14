@@ -11,7 +11,7 @@ class GroundWall:
 
     render_time = 0.0
 
-    def __init__(self, cfg, integrator_class, render=True, adapter='cpu'):
+    def __init__(self, cfg, integrator_class, render=True, adapter='cpu', noise=None):
 
         self.cfg = cfg
         self.frame_dt = 1.0/60.0
@@ -23,11 +23,16 @@ class GroundWall:
         self.train_iters = cfg.train_iters
 
         builder = warp.sim.ModelBuilder()
+        
+        init_vel = [cfg.init_vel[0], cfg.init_vel[1]]
+        if noise:
+            init_vel[0] += np.random.normal(scale=noise)
+            init_vel[1] += np.random.normal(scale=noise)
 
         # default up axis is y
         builder.add_particle(
             pos=(cfg.init_pos[0], cfg.init_pos[1], 0.0), 
-            vel=(cfg.init_vel[0], cfg.init_vel[1], 0.0), 
+            vel=(init_vel[0], init_vel[1], 0.0), 
             mass=1.0
         )
         # for rendering purposes
@@ -171,3 +176,13 @@ class GroundWall:
         tape.backward(l)
         x_grad_analytic = tape.gradients[param]
         return x_grad_analytic
+    
+    def check_grad_pos(self, states):
+        tape = wp.Tape()
+        with tape:
+            l = self.compute_loss()
+        tape.backward(l)
+        grads = []
+        for i in range(len(states)):
+            grads.append(tape.gradients[states[i].particle_q])
+        return grads
