@@ -1,9 +1,7 @@
 simulation_time: 0.5
-steps: 200
+steps: 300
 radius: 0.1
-init_pos:
-  - 0.0
-  - 0.5
+init_pos: [0.0, 0.5]
 init_v: 5.0
 wall_x: 1.0
 wall_y: 1.0
@@ -14,3 +12,5 @@ customized_mu: 100
 learning_rate: 0.01
 train_iters: 1000
 result_dir: results
+samples: 100
+std: 0.04
